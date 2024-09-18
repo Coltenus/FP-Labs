@@ -68,8 +68,9 @@ T
 ```
 ## Варіант 8
 
-![[lab-1-variant.png]]
-
+<p align="center">
+<img src="lab-1-variant.png">
+</p>
 
 ```lisp
 * (setq *list1* (list 6 'D))
