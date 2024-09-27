@@ -13,7 +13,7 @@
 ;; Пункт 1
 * (defvar *list*)
 *LIST*
-* (setq *list* (list 1 (cons 'c' (2 3)) 3 (cons nil ()) () (cons 1 2) (cons () 1)))
+* (setq *list* (list 1 (cons 'c (list 2 3)) 3 (cons nil ()) () (cons 1 2) (cons () 1)))
 (1 (C 2 3) 3 (NIL) NIL (1 . 2) (NIL . 1))
 
 ;; Пункт 2
@@ -27,8 +27,8 @@
 ;; Пункт 4
 * (car (cdddr *list*))
 (NIL)
-* (NTH 3 *list*)
-(NIL)
+* (NTH 2 *list*)
+3
 
 ;; Пункт 5
 * (NTH 6 *list*)
