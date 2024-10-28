@@ -1,10 +1,7 @@
 (defun remove-even-pair (lst)
-    (let ((rst (mod (list-length lst) 4)))
-        (cond
-            ((null lst) nil)
-            ((or (= rst 1) (= rst 0)) (remove-even-pair (cddr lst)))
-            (t (cons (car lst) (cons (cadr lst) (remove-even-pair (cddr lst)))))
-        )
+    (if lst
+        (cons (car lst) (cons (cadr lst) (remove-even-pair (cddddr lst))))
+        nil
     )
 )
 
