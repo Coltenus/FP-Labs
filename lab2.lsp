@@ -1,5 +1,5 @@
 (defun remove-even-pair (lst)
-    (if lst
+    (if lst (listp lst)
         (cons (car lst) (cons (cadr lst) (remove-even-pair (cddddr lst))))
         nil
     )
@@ -35,13 +35,8 @@
             (if (listp (second buffer))
                 (cond
                     ((listp (car lst))
-                        (progn
-                            (let ((buf (multiple-value-list (find-deepest-list-func (car lst) (1+ dep)))))
-                                (result-comparison buffer buf dep lst)
-                            )
-                            (let ((buf (multiple-value-list (find-deepest-list-func (car lst) (1+ dep)))))
-                                (result-comparison buffer buf dep lst)
-                            )
+                        (let ((buf (multiple-value-list (find-deepest-list-func (car lst) (1+ dep)))))
+                            (result-comparison buffer buf dep lst)
                         )
                     )
                     ((<= (first buffer) dep)
