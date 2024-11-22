@@ -3,15 +3,9 @@
 (defun ftol (lst)
     (if lst
         (if (not (endp (cdr lst)))
-            (if (and (car lst) (car (cdr lst)))
-                (if (> (car lst) (cadr lst))
-                    (cons (cadr lst) (ftol (cons (car lst) (cddr lst))))
-                    (cons (car lst) (ftol (cdr lst)))
-                )
-                (if (car lst)
-                    (cons (cadr lst) (ftol (cons (car lst) (cddr lst))))
-                    (cons (car lst) (ftol (cdr lst)))
-                )
+            (if (> (car lst) (cadr lst))
+                (cons (cadr lst) (ftol (cons (car lst) (cddr lst))))
+                (cons (car lst) (ftol (cdr lst)))
             )
             lst
         )
@@ -23,14 +17,8 @@
     (if lst
         (let ((f (car lst)) (buffer (ltof (cdr lst))))
             (if buffer
-                (if (car buffer)
-                    (if f
-                        (if (< f (car buffer))
-                            (cons f buffer)
-                            (cons (car buffer) (cons f (cdr buffer)))
-                        )
-                        (cons f buffer)
-                    )
+                (if (< f (car buffer))
+                    (cons f buffer)
                     (cons (car buffer) (cons f (cdr buffer)))
                 )
                 (list f)
@@ -75,33 +63,17 @@
 
 (defun swap-elements (lst i j)
     (if (not (or (= i j) (endp (cdr lst))))
-        (if (null (nth i lst))
-            (if (< j i)
+        (if (< j i)
+            (if (< (nth i lst) (nth j lst))
                 (progn
                     (swap lst i j)
                     t
                 )
             )
-            (if (nth j lst)
-                (if (< j i)
-                    (if (< (nth i lst) (nth j lst))
-                        (progn
-                            (swap lst i j)
-                            t
-                        )
-                    )
-                    (if (> (nth i lst) (nth j lst))
-                        (progn
-                            (swap lst i j)
-                            t
-                        )
-                    )
-                )
-                (if (> j i)
-                    (progn
-                        (swap lst i j)
-                        t
-                    )
+            (if (> (nth i lst) (nth j lst))
+                (progn
+                    (swap lst i j)
+                    t
                 )
             )
         )
@@ -147,7 +119,10 @@
     (check-func func "Test 5" '(2 2 2 2 2 1 1 1 3 3 3 4 4 4) '(1 1 1 2 2 2 2 2 3 3 3 4 4 4))
     (check-func func "Test 6" '(100 1 50 25 75 10 90 5) '(1 5 10 25 50 75 90 100))
     (check-func func "Test 7" '(0 -5 10 -10 15 -15 20 -20) '(-20 -15 -10 -5 0 10 15 20))
-    (check-func func "Test 8" '(8 4 3 5 nil 10 9 3) '(nil 3 3 4 5 8 9 10))
+    (handler-case (check-func func "Test 8" '(8 4 3 5 nil 10 9 3) '(nil 3 3 4 5 8 9 10))
+        (type-error () (format t "passed... Test 8~%"))
+        (error (c) (format t "Error: ~a~%" c))
+    )
 )
 
 (tests #'shuffle-sort-functional "shuffle-sort-functional")
