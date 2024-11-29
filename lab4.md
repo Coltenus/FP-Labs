@@ -36,7 +36,7 @@
             (if buffer
                 (let ((kf (funcall key f)) (kb (funcall key (car buffer))))
                     (if (or (not (funcall test kf kb))
-                            (equalp kf kb))
+                            (eql kf kb))
                         (cons f buffer)
                         (cons (car buffer) (cons f (cdr buffer)))
                     )
@@ -127,48 +127,41 @@ CL-USER> (reduce (replacer 1 2 :count 2)
 ## Лістинг функції з використанням деструктивного підходу
 ```lisp
 (defun replacer (what to &key (count nil) (test #'eql))
-  (let ((replace-count 0))
-    (lambda (acc item)
-        (let ((lst nil) (it nil))
-            (if (listp item)
-                (progn
-                    (setq lst item)
-                    (setq it acc))
-                (progn
-                    (setq lst acc)
-                    (setq it item))
-            )
-            (if (and (funcall test it what)
-                    (or (not count)
-                        (< replace-count count)))
-                (progn
-                    (incf replace-count)
-                    (cons to lst))
-                (cons it lst))
+    "Works with from-end t only"
+    (let ((replace-count 0))
+        (lambda (item acc)
+            (if (and (funcall test item what)
+                (or (not count)
+                    (< replace-count count)))
+            (progn
+                (incf replace-count)
+                (cons to acc))
+            (cons item acc))
         )
-      )))
+    )
+)
 ```
 ### Тестові набори та утиліти
 ```lisp
-(defun check-replacer (name input what to expected &key (count nil) (from-end nil))
-    (let ((buffer (reduce (replacer what to :count count) input :initial-value '() :from-end from-end)))
+(defun check-replacer (name input what to expected &key (count nil) (test #'eql))
+    (let ((buffer (reduce (replacer what to :count count :test test) input :initial-value '() :from-end t)))
         (format t "~:[FAILED~;passed~]... ~a~%" (equal buffer expected) name)
     )
 )
 
 (defun tests-replacer (name)
     (format t "Running tests for ~A...~%" name)
-    (check-replacer "Test 1" '(1 1 1 4) 1 2 '(4 2 2 2))
-    (check-replacer "Test 1" '(1 1 1 4) 1 2 '(4 1 2 2) :count 2)
-    (check-replacer "Test 2" '(1 1 1 4) 1 2 '(2 2 2 4) :from-end t)
-    (check-replacer "Test 3" '(1 1 1 4) 1 2 '(1 2 2 4) :count 2 :from-end t)
+    (check-replacer "Test 1" '(1 1 1 4) 1 2 '(2 2 2 4))
+    (check-replacer "Test 2" '(1 1 1 4) 1 2 '(1 2 2 4) :count 2)
+    (check-replacer "Test 3" '(1 (2 3) 1 4) 1 2 '(2 (2 3) 2 4) :test #'equalp)
+    (check-replacer "Test 4" '(1 (2 3) 1 (2 3) 4) '(2 3) 5 '(1 (2 3) 1 5 4) :count 1 :test #'equalp)
 )
 ```
 ### Тестування
 ```lisp
 Running tests for replacer...
 passed... Test 1
-passed... Test 1
 passed... Test 2
 passed... Test 3
+passed... Test 4
 ```
