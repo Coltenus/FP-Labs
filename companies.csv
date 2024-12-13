@@ -1,0 +1,13 @@
+ID,Company,Country,Type,Founded
+1,SpaceX,USA,Private,2002
+2,NASA,USA,Government,1958
+3,ESA,Europe,Government,1975
+4,Blue Origin,USA,Private,2000
+5,CNSA,China,Government,1993
+6,ISRO,India,Government,1969
+7,JAXA,Japan,Government,2003
+8,Rocket Lab,New Zealand,Private,2006
+9,Virgin Galactic,USA,Private,2004
+10,Boeing,USA,Private,1916
+11,Northrop Grumman,USA,Private,1939
+12,Lockheed Martin,USA,Private,1995
